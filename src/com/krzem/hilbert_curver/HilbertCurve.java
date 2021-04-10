@@ -43,40 +43,45 @@ public class HilbertCurve{
 
 
 	public int[] point(int h){
-		String bs=Integer.toBinaryString(h);
-		while (bs.length()<this.d*this.i){
-			bs="0"+bs;
-		}
-		int[] x=new int[this.d];
-		for (int i=0;i<this.d;i++){
-			String bl="";
-			for (int j=i+0;j<bs.length();j+=this.d){
-				bl+=String.valueOf(bs.charAt(j));
+		try{
+			String bs=Integer.toBinaryString(h);
+			while (bs.length()<this.d*this.i){
+				bs="0"+bs;
 			}
-			x[i]=Integer.parseInt(bl,2);
-		}
-		int t=x[this.d-1]>>1;
-		for (int i=this.d-1;i>0;i--){
-			x[i]^=x[i-1];
-		}
-		x[0]^=t;
-		int q=2;
-		int z=2<<(this.i-1);
-		while (q!=z){
-			int p=q-1;
-			for (int i=this.d-1;i>=0;i--){
-				if ((x[i]&q)>=1){
-					x[0]^=p;
+			int[] x=new int[this.d];
+			for (int i=0;i<this.d;i++){
+				String bl="";
+				for (int j=i+0;j<bs.length();j+=this.d){
+					bl+=String.valueOf(bs.charAt(j));
 				}
-				else{
-					t=(x[0]^x[i])&p;
-					x[0]^=t;
-					x[i]^=t;
-				}
+				x[i]=Integer.parseInt(bl,2);
 			}
-			q<<=1;
+			int t=x[this.d-1]>>1;
+			for (int i=this.d-1;i>0;i--){
+				x[i]^=x[i-1];
+			}
+			x[0]^=t;
+			int q=2;
+			int z=2<<(this.i-1);
+			while (q!=z){
+				int p=q-1;
+				for (int i=this.d-1;i>=0;i--){
+					if ((x[i]&q)>=1){
+						x[0]^=p;
+					}
+					else{
+						t=(x[0]^x[i])&p;
+						x[0]^=t;
+						x[i]^=t;
+					}
+				}
+				q<<=1;
+			}
+			return x;
 		}
-		return x;
+		catch (NumberFormatException e){
+			return null;
+		}
 	}
 
 
